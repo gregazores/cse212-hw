@@ -13,7 +13,18 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return []; // replace this return statement with your own
+        //create an array with type double provided with the length
+        double[] array = new double[length];
+
+        //within the for loop calculate each multiple of the number by number + number*i
+        for(int i = 0; i < length; i++) 
+        {
+            array[i] = number + number*i;
+            //write the current iteration in the console to check
+            Console.WriteLine(array[i]);
+        }
+
+        return array; // replace this return statement with your own
     }
 
     /// <summary>
@@ -29,5 +40,18 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+        
+        //Use the GetRange() method to get the range of elements (slice starting from data.Count - amount with count number of elements)
+        List<int> lastEntries = data.GetRange(data.Count - amount, amount);
+        // Use the GetRange() method to get the range of elements (slice from the Start(0) with data.Count - amount number of elements)
+        List<int> firstEntries = data.GetRange(0, data.Count - amount); 
+
+        // clear the original list
+        data.Clear();
+
+        // add the sliced parts
+        data.AddRange(lastEntries);
+        data.AddRange(firstEntries);
+
     }
 }
