@@ -3,6 +3,10 @@
 /// </summary>
 public class PersonQueue
 {
+
+    //observation, this assignment is using List<T> instead of Queue<T>
+    // probably since List allows more flexible access to the elements
+    // unline Queue which is is a strict FIFO (First-In, First-Out) structure
     private readonly List<Person> _queue = new();
 
     public int Length => _queue.Count;
@@ -13,7 +17,7 @@ public class PersonQueue
     /// <param name="person">The person to add</param>
     public void Enqueue(Person person)
     {
-        _queue.Insert(0, person);
+        _queue.Add(person);
     }
 
     public Person Dequeue()
