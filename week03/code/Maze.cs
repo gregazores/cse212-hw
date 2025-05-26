@@ -20,9 +20,37 @@ public class Maze
     private int _currX = 1;
     private int _currY = 1;
 
+    // this is the constructor part of the class
+    // runs automatically when new Maze object is created
+    //It takes a dictionary (mazeMap) as input which is a dictionary property
+    // which has a tuple key and a bool value
     public Maze(Dictionary<ValueTuple<int, int>, bool[]> mazeMap)
     {
         _mazeMap = mazeMap;
+    }
+
+    // i'll use a helper function to keep things organized
+    private void Move(int directionIndex, int deltaX, int deltaY)
+    {
+        //TryGetValue is a method used with dictionaries to safely retrieve 
+        // a value without throwing an exception if the key doesn't exist.
+        // usually throws KeyNotFoundException if this is ommited
+        // If the position exists, it stores the result in directions
+        // If the position does NOT exist, directions remains null. 
+        // the if statement becomes valid and InvalidOperationException("Can't go that way!"); is thrown
+
+        // on the other hand, !directions[directionIndex] checks:
+        // directions is an array w/c stores movement options
+        // If directions[directionIndex] is false, it means there’s a wall, 
+        // and the move is not allowed.
+        if (!_mazeMap.TryGetValue((_currX, _currY), out var directions) || !directions[directionIndex])
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
+
+        // if the move is valid then we can just increment the current x and y values
+        _currX += deltaX;
+        _currY += deltaY;
     }
 
     // TODO Problem 4 - ADD YOUR CODE HERE
@@ -32,7 +60,13 @@ public class Maze
     /// </summary>
     public void MoveLeft()
     {
-        // FILL IN CODE
+        // i'll use a helper function to keep things organized
+        // if (!_mazeMap.TryGetValue((_currX, _currY), out var directions) || !directions[0])
+        //     throw new InvalidOperationException("Can't go that way!");
+
+        // _currX -= 1;
+
+        Move(0, -1, 0);
     }
 
     /// <summary>
@@ -41,7 +75,13 @@ public class Maze
     /// </summary>
     public void MoveRight()
     {
-        // FILL IN CODE
+        // i'll use a helper function to keep things organized
+        // if (!_mazeMap.TryGetValue((_currX, _currY), out var directions) || !directions[1])
+        //     throw new InvalidOperationException("Can't go that way!");
+
+        // _currX += 1;
+
+        Move(1, 1, 0);
     }
 
     /// <summary>
@@ -50,7 +90,13 @@ public class Maze
     /// </summary>
     public void MoveUp()
     {
-        // FILL IN CODE
+        // i'll use a helper function to keep things organized
+        // if (!_mazeMap.TryGetValue((_currX, _currY), out var directions) || !directions[2])
+        //     throw new InvalidOperationException("Can't go that way!");
+
+        // _currY -= 1;
+
+        Move(2, 0, -1);
     }
 
     /// <summary>
@@ -59,7 +105,13 @@ public class Maze
     /// </summary>
     public void MoveDown()
     {
-        // FILL IN CODE
+        // i'll use a helper function to keep things organized
+        // if (!_mazeMap.TryGetValue((_currX, _currY), out var directions) || !directions[3])
+        //     throw new InvalidOperationException("Can't go that way!");
+
+        // _currY += 1;
+
+        Move(3, 0, 1);
     }
 
     public string GetStatus()

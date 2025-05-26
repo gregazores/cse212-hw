@@ -13,6 +13,9 @@
     {
         var newNode = new PriorityItem(value, priority);
         _queue.Add(newNode);
+
+        // Ensure stable priority order (sorting by highest priority first)
+        //_queue = _queue.OrderByDescending(item => item.Priority).ToList();
     }
 
     public string Dequeue()
@@ -26,10 +29,19 @@
         var highPriorityIndex = 0;
         // for some reason, index stops before the last item index < _queue.Count - 1
         // itn should iterate through the entire list index < _queue.Count
-        for (int index = 1; index < _queue.Count; index++)
+        for (int index = 1; index < _queue.Count; index++) // Fix the loop condition
         {
-                if (_queue[index].Priority > _queue[highPriorityIndex].Priority)
-                    highPriorityIndex = index;
+            // old code
+            // if (_queue[index].Priority > _queue[highPriorityIndex].Priority)
+            //     highPriorityIndex = index;
+
+            // the fix
+
+            if (_queue[index].Priority > _queue[highPriorityIndex].Priority ||
+                (_queue[index].Priority == _queue[highPriorityIndex].Priority && index < highPriorityIndex))
+            {
+                highPriorityIndex = index;
+            }
         }
 
         // Remove and return the item with the highest priority

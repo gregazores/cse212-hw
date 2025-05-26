@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Text.Json;
 
 public static class SetsAndMaps
@@ -22,7 +23,33 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        // first we create a hashset and fill it with the contents of the words
+        HashSet<string> wordArray = new HashSet<string>(words);
+        //I decided to use List this time instead of an array since the lenght is unknown
+        List<string> symmetric = new List<string>();
+
+        foreach (string w in words)
+        {
+            // we will inverse the current item of the word array
+            string inverse = string.Concat(w[1], w[0]);
+
+            // if the letters are the same, the continue statement 
+            // skips and moves to the next item on the words array
+            if (w[0] == w[1])
+            {
+                continue;
+            }
+
+            // now we check if the inverse version exists in the wordArray hashset
+            // if it exist, we concatenate the original and inversed word and add it to our symmetric array
+            if (wordArray.Contains(inverse))
+            {
+                symmetric.Add(string.Concat(w, "&", inverse));
+                wordArray.Remove(w);            // notice how we removed the word item 'w' and it's inverse
+                wordArray.Remove(inverse);      // this is to ensure nothing is processed again
+            }
+        }
+        return symmetric.ToArray();
     }
 
     /// <summary>
@@ -43,6 +70,19 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            var degs = fields[3]; // creating a variable to store the degree here
+
+            // of the key degs doesn't exist in our dictionary, we will create the key 
+            // and initialize the value to 1
+            if (!degrees.ContainsKey(degs))
+            {
+                degrees.Add(degs, 1);
+            }
+            else
+            {
+                degrees[degs] += 1; // if the key does exist then we just increment the value
+            }
+
         }
 
         return degrees;
@@ -67,7 +107,56 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        // first remove all white spaces and convert to lowercase
+        word1 = word1.Replace(" ", "").ToLower();
+        word2 = word2.Replace(" ", "").ToLower();
+
+        // quick check if onset the two words differ in length
+        // automatic not an anagram
+        if (word1.Length != word2.Length)
+        {
+            return false;
+        }
+
+        // inspired from the prev problem we will create a summary of
+        // what letters are available and how many times it appears in the word
+        // so we will create a dictionary here
+        Dictionary<char, int> letterCounts1 = new Dictionary<char, int>();
+        Dictionary<char, int> letterCounts2 = new Dictionary<char, int>();
+
+        // based on the prev problem let us evaluate word 1
+        foreach (char w in word1)
+        {
+            if (!letterCounts1.ContainsKey(w))
+            {
+                letterCounts1.Add(w, 1); // if the letter doesnt exist as a key add it
+            }
+            else
+            {
+                letterCounts1[w] += 1; // if the letter exists as key does exist then we just increment the value
+
+            }
+
+        }
+
+        // now we evaluate word 2 this time
+        foreach (char w in word2)
+        {
+            if (!letterCounts2.ContainsKey(w))
+            {
+                letterCounts2.Add(w, 1); // if the letter doesnt exist as a key add it
+            }
+            else
+            {
+                letterCounts2[w] += 1; // if the letter exists as key does exist then we just increment the value
+
+            }
+
+        }
+
+        bool areEqual = letterCounts1.Count == letterCounts2.Count && !letterCounts1.Except(letterCounts2).Any();
+
+        return areEqual;
     }
 
     /// <summary>
@@ -101,6 +190,35 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+
+        // so if the feature collection returns null or empty array, we exit by returning an empty array
+        if (featureCollection?.Features == null || featureCollection.Features.Count == 0)
+        {
+            return Array.Empty<string>();
+        }
+
+        // using list here to have infinite length 
+        List<string> earthquakeData = new List<string>();
+
+        foreach (var feature in featureCollection.Features)
+        {
+            // so each feature item in this instance has a property named Properties
+            // we check if among the keys "place" exists if not we skip and move to the next item
+            if (!feature.Properties.ContainsKey("place"))
+            {
+                continue;
+            }
+
+            // otherwise, we take the value of the "place" key convert it to string
+            // same with magnitude
+            string place = feature.Properties["place"].ToString();
+            string magnitude = feature.Properties.ContainsKey("mag") ? $"{feature.Properties["mag"]:F1}" : "N/A";
+
+            // add it to our earthquake array which is a List
+            // Ensure the format matches expected test output
+            earthquakeData.Add($"{place} - Mag {magnitude}");
+        }
+
+        return earthquakeData.ToArray();
     }
 }
