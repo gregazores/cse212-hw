@@ -2,11 +2,16 @@ using System.Collections;
 
 public class BinarySearchTree : IEnumerable<int>
 {
+    //The underscore prefix (_)  indicates a private field.
     private Node? _root;
 
     /// <summary>
     /// Insert a new node in the BST.
     /// </summary>
+     
+    /// Insert(value) is the entry point.
+    /// It checks if _root is null (i.e., the tree is empty).
+    /// If _root is not null, it hands off the insertion to the root Node.
     public void Insert(int value)
     {
         // Create new node
@@ -77,10 +82,20 @@ public class BinarySearchTree : IEnumerable<int>
             yield return number;
         }
     }
+    
+    //To implement the TraverseBackward function in the BinarySearchTree class, 
+    // you just need to reverse the order of traversal used in TraverseForward.
 
     private void TraverseBackward(Node? node, List<int> values)
     {
         // TODO Problem 3
+
+        if (node is not null)
+        {
+            TraverseBackward(node.Right, values);  // Visit right subtree first
+            values.Add(node.Data);                 // Then visit current node
+            TraverseBackward(node.Left, values);   // Then visit left subtree
+        }
     }
 
     /// <summary>

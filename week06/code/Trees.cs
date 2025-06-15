@@ -46,8 +46,26 @@ public static class Trees
     /// <param name="first">the first index in the sortedNumbers to insert</param>
     /// <param name="last">the last index in the sortedNumbers to insert</param>
     /// <param name="bst">the BinarySearchTree in which to insert the values</param>
+    
+    /// To implement the InsertMiddle function so that it builds a balanced binary search tree from a sorted list, you should recursively:
+    /// Find the middle index of the current range.
+    /// Insert the middle value into the BinarySearchTree.
+    /// Recursively do the same for the left and right halves of the current range.
     private static void InsertMiddle(int[] sortedNumbers, int first, int last, BinarySearchTree bst)
     {
         // TODO Start Problem 5
+
+        if (first > last)
+        {
+            return; // Base case: no elements to insert
+        }
+
+        int middle = (first + last) / 2;
+
+        bst.Insert(sortedNumbers[middle]); // Insert the middle value
+
+        // Recursively insert middle values from left and right sublists
+        InsertMiddle(sortedNumbers, first, middle - 1, bst);  // Left half
+        InsertMiddle(sortedNumbers, middle + 1, last, bst);   // Right half
     }
 }
